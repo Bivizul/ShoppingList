@@ -1,8 +1,8 @@
 package com.android.example.shoppinglist.domain
 
-class AddShopItemUseCase {
+class AddShopItemUseCase(private val shopListRepository: ShopListRepository) {
 
-    fun addShopItem(shopItemId: ShopItem){
-        TODO()
+    fun addShopItem(shopItem: ShopItem){
+        shopListRepository.addShopItem(shopItem)
     }
 }
