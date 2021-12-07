@@ -12,6 +12,8 @@ class MainActivity : AppCompatActivity() {
     // чтобы не делать постоянную проверку на NULL
     private lateinit var viewModel: MainViewModel
 
+    private var count = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -19,7 +21,12 @@ class MainActivity : AppCompatActivity() {
         //viewModel = ViewModelProvider(this).get(MainViewModel::class.java)       // 2-variant OLD
         viewModel.shopList.observe(this){
             Log.d("mainActivityTest", it.toString())    // передаем список елементов приведенный к строчному виду
+            if (count == 0) {
+                count++
+                val item = it[0]
+                viewModel.changeEnableState(item)
+            }
         }
-        viewModel.getShopList()
+//        viewModel.getShopList()
     }
 }

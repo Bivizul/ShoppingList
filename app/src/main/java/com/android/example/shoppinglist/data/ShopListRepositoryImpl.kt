@@ -1,5 +1,7 @@
 package com.android.example.shoppinglist.data
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.android.example.shoppinglist.domain.ShopItem
 import com.android.example.shoppinglist.domain.ShopListRepository
 
@@ -7,6 +9,7 @@ import com.android.example.shoppinglist.domain.ShopListRepository
 // один и тот е экземпляр, чтобы на всехэкранах работал с одним и тем же репозиторием
 object ShopListRepositoryImpl: ShopListRepository {
 
+    private val shopListLD = MutableLiveData<List<ShopItem>>()
     private val shopList = mutableListOf<ShopItem>()
     private var autoIncrementId = 0
     init{
@@ -21,10 +24,12 @@ object ShopListRepositoryImpl: ShopListRepository {
             shopItem.id = autoIncrementId++
         }
         shopList.add(shopItem)
+        updateList()
     }
 
     override fun deleteShopItem(shopItem: ShopItem) {
         shopList.remove(shopItem)
+        updateList()
     }
 
     override fun editShopItem(shopItem: ShopItem) {
@@ -42,8 +47,12 @@ object ShopListRepositoryImpl: ShopListRepository {
         // бросит исключение если не найдет объект
     }
 
-    override fun getShopList(): List<ShopItem> {
+    override fun getShopList(): LiveData<List<ShopItem>> {
         // возвращать лучше копию объекта
-        return shopList.toList()
+        return shopListLD
+    }
+
+    private fun updateList(){
+        shopListLD.value = shopList.toList()    // возвращаем копию листа
     }
 }

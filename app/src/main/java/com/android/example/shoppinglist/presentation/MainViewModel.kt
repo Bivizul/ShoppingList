@@ -21,24 +21,25 @@ class MainViewModel: ViewModel() {
     private val editShopItemUseCase = EditShopItemUseCase(repository)
 
     // MutableLiveData - это LiveData в которую мы сами можем вставлять объекты
-    val shopList = MutableLiveData<List<ShopItem>>()
+//    val shopList = MutableLiveData<List<ShopItem>>()
+    val shopList = getShopListUseCase.getShopList()
 
-    fun getShopList(){
-        val list = getShopListUseCase.getShopList()
-        // добавляем елемент
-        shopList.value = list      // можно вызывать только из главного потока
-        //shopList.postValue = list       // можно вызывать из любого потока
-    }
+//    fun getShopList(){
+//        val list = getShopListUseCase.getShopList()
+//        // добавляем елемент
+//        shopList.value = list      // можно вызывать только из главного потока
+//        //shopList.postValue = list       // можно вызывать из любого потока
+//    }
 
     fun deleteShopItem(shopItem: ShopItem){
         deleteShopItemUseCase.deleteShopItem(shopItem)
-        getShopList()
+//        getShopList()
     }
 
     fun changeEnableState(shopItem: ShopItem){
         val newItem = shopItem.copy(enable = !shopItem.enable)
         editShopItemUseCase.editShopItem(newItem)
-        getShopList()
+//        getShopList()
 
     }
 }
