@@ -2,23 +2,18 @@ package com.android.example.shoppinglist.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.RecoverySystem
-import android.util.Log
-import android.view.LayoutInflater
-import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.android.example.shoppinglist.R
-import com.android.example.shoppinglist.domain.ShopItem
 
 class MainActivity : AppCompatActivity() {
 
     // так как точно будет присваивать значение, поэтому можем использовать lateinit var
     // чтобы не делать постоянную проверку на NULL
     private lateinit var viewModel: MainViewModel
+
     //    private lateinit var llshopList: LinearLayout
-    private lateinit var adapter: ShopListAdapter
+    private lateinit var shopListAdapter: ShopListAdapter
 
 //    private var count = 0
 
@@ -37,15 +32,25 @@ class MainActivity : AppCompatActivity() {
                 viewModel.changeEnableState(item)
             }
             showList(it)*/
-            adapter.shopList = it
+            shopListAdapter.shopList = it
         }
 //        viewModel.getShopList()
     }
 
     private fun setupRecycleView() {
         val rvShopList = findViewById<RecyclerView>(R.id.rv_shop_list)
-        adapter = ShopListAdapter()
-        rvShopList.adapter = adapter
+        with(rvShopList) {
+            shopListAdapter = ShopListAdapter()
+            adapter = shopListAdapter
+            recycledViewPool.setMaxRecycledViews(
+                ShopListAdapter.VIEW_TYPE_ENABLED,
+                ShopListAdapter.MAX_POOL_SIZE
+            )
+            recycledViewPool.setMaxRecycledViews(
+                ShopListAdapter.VIEW_TYPE_DISABLED,
+                ShopListAdapter.MAX_POOL_SIZE
+            )
+        }
     }
 
     /*private fun showList(list: List<ShopItem>) {
