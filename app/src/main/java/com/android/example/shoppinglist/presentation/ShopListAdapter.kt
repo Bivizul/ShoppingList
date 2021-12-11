@@ -14,11 +14,11 @@ import com.android.example.shoppinglist.domain.ShopItem
 
 // RecyclerView создает столько элементов, сколько нужно для вывода на экран + запас снизу и сверху
 class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>() {
-    var count = 0
+    private var count = 0
     var shopList = listOf<ShopItem>()
         set(value) {
             val callback = ShopListDiffCallback(shopList, value)
-            // производим все вычисления
+            // производим все вычисления в главном потоке
             val diffResult = DiffUtil.calculateDiff(callback)
             // сообщаем адаптеру какие методы необходимо вызвать
             diffResult.dispatchUpdatesTo(this)
