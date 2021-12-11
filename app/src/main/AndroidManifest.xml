@@ -9,7 +9,7 @@
         android:roundIcon="@android:drawable/ic_menu_edit"
         android:supportsRtl="true"
         android:theme="@style/Theme.ShoppingList"
-        android:fullBackupContent="">
+        android:fullBackupContent="true">
 
         <!--  android:windowSoftInputMode="adjustResize
         Если открыта клавиатура, то нужно уменьшить размер экрана-->
