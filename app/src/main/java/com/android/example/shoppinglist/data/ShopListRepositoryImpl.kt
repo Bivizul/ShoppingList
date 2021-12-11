@@ -6,18 +6,19 @@ import com.android.example.shoppinglist.domain.ShopItem
 import com.android.example.shoppinglist.domain.ShopListRepository
 import kotlin.random.Random
 
-// сlass realizuyushii interface - Impl
+// класс реализующий interface - Impl
 // один и тот е экземпляр, чтобы на всехэкранах работал с одним и тем же репозиторием
-object ShopListRepositoryImpl: ShopListRepository {
+object ShopListRepositoryImpl : ShopListRepository {
 
     private val shopListLD = MutableLiveData<List<ShopItem>>()
-    //private val shopList = mutableListOf<ShopItem>()
+
     //меняем на сортированный список
-    private val shopList = sortedSetOf<ShopItem>({ o1, o2 -> o1.id.compareTo(o2.id)})
+    private val shopList = sortedSetOf<ShopItem>({ o1, o2 -> o1.id.compareTo(o2.id) })
 
     private var autoIncrementId = 0
-    init{
-        for (i in 0 until 1000){
+
+    init {
+        for (i in 0 until 1000) {
             val item = ShopItem("Name $i", i, Random.nextBoolean())
             addShopItem(item)
         }
@@ -37,8 +38,6 @@ object ShopListRepositoryImpl: ShopListRepository {
     }
 
     override fun editShopItem(shopItem: ShopItem) {
-        //val oldElement = getShopItem(shopItem.id)
-        //shopList.remove(oldElement)
         shopList.remove(getShopItem(shopItem.id))
         addShopItem(shopItem)
     }
@@ -56,7 +55,7 @@ object ShopListRepositoryImpl: ShopListRepository {
         return shopListLD
     }
 
-    private fun updateList(){
+    private fun updateList() {
         shopListLD.value = shopList.toList()    // возвращаем копию листа
     }
 }
