@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.android.example.shoppinglist.R
 import com.android.example.shoppinglist.domain.ShopItem
@@ -16,9 +17,15 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>
     var count = 0
     var shopList = listOf<ShopItem>()
         set(value) {
+            val callback = ShopListDiffCallback(shopList, value)
+            // производим все вычисления
+            val diffResult = DiffUtil.calculateDiff(callback)
+            // сообщаем адаптеру какие методы необходимо вызвать
+            diffResult.dispatchUpdatesTo(this)
             field = value
-            notifyDataSetChanged()
+//            notifyDataSetChanged()
         }
+
     // будет лежать либо функция ((ShopItem) -> Unit)? либо NULL
     var onShopItemLongClickListener: ((ShopItem) -> Unit)? = null
     var onShopItemClickListener: ((ShopItem) -> Unit)? = null
@@ -43,7 +50,7 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>
             onShopItemLongClickListener?.invoke(shopItem)
             true
         }
-        viewHolder.view.setOnClickListener{
+        viewHolder.view.setOnClickListener {
             onShopItemClickListener?.invoke(shopItem)
         }
         viewHolder.tvName.text = shopItem.name
@@ -88,7 +95,7 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>
         val tvCount = view.findViewById<TextView>(R.id.tv_count)
     }
 
-    interface OnShopItemLongClickListener{
+    interface OnShopItemLongClickListener {
         fun onShopItemLongClick(shopItem: ShopItem)
     }
 

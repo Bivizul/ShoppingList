@@ -69,12 +69,14 @@ class MainActivity : AppCompatActivity() {
             viewModel.changeEnableState(it)
         }
     }
+
     // короткий клик
     private fun setupClickListener() {
         shopListAdapter.onShopItemClickListener = {
             Log.d("MainActivity", it.toString())
         }
     }
+
     // свайп
     private fun setupSwipeListener(rvShopList: RecyclerView) {
         val callback =
@@ -97,7 +99,7 @@ class MainActivity : AppCompatActivity() {
                     Toast.makeText(
                         this@MainActivity,
                         "Удалено",
-    //                    getString(R.string.note_deleted),
+                        //                    getString(R.string.note_deleted),
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -106,7 +108,6 @@ class MainActivity : AppCompatActivity() {
         val itemTouchHelper = ItemTouchHelper(callback)
         itemTouchHelper.attachToRecyclerView(rvShopList)
     }
-
 
 
     /*private fun showList(list: List<ShopItem>) {
