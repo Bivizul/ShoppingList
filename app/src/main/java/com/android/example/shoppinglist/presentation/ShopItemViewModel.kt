@@ -1,5 +1,7 @@
 package com.android.example.shoppinglist.presentation
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.android.example.shoppinglist.data.ShopListRepositoryImpl
 import com.android.example.shoppinglist.domain.AddShopItemUseCase
@@ -16,28 +18,68 @@ class ShopItemViewModel : ViewModel() {
     private val addShopItemUseCase = AddShopItemUseCase(repository)
     private val editShopItemUseCase = EditShopItemUseCase(repository)
 
+    // для проверки на пустоту
+    // версия для viewModel
+    private val _errorInputName = MutableLiveData<Boolean>()
+
+    // версия для activity
+    val errorInputName: LiveData<Boolean>
+        get() = _errorInputName
+
+    // для проверки на количество
+    // версия для viewModel
+    private val _errorInputCount = MutableLiveData<Boolean>()
+
+    // версия для activity
+    val errorInputCount: LiveData<Boolean>
+        get() = _errorInputCount
+
+    private val _shopItem = MutableLiveData<ShopItem>()
+    val shopItem: LiveData<ShopItem>
+        get() = _shopItem
+
+    // скажем когда можно закрывать экран с типом данных без полезного значения
+    // версия для viewModel
+    private val _shouldCloseScreen = MutableLiveData<Unit>()
+    // версия для activity
+    val shouldCloseScreen: LiveData<Unit>
+        get() = _shouldCloseScreen
+
+    // загружаем элемент по его ID
     fun getShopItem(shopItemId: Int) {
+        // получаем елемент
         val item = getShopItemUseCase.getShopItem(shopItemId)
+        // установим элемент в LiveData
+        _shopItem.value = item
     }
 
     fun addShopItem(inputName: String?, inputCount: String?) {
         val name = parseName(inputName)
         val count = parseCount(inputCount)
         val fieldsValid = validateInput(name, count)
-        if(fieldsValid){
+        if (fieldsValid) {
             val shopItem = ShopItem(name, count, true)
             addShopItemUseCase.addShopItem(shopItem)
+            finishWork()
         }
 
     }
 
     fun editShopItem(inputName: String?, inputCount: String?) {
+        // получаем имя
         val name = parseName(inputName)
+        // получаме количество
         val count = parseCount(inputCount)
+        // проверяем корректность введенных полей
         val fieldsValid = validateInput(name, count)
-        if(fieldsValid){
-            val shopItem = ShopItem(name, count, true)
-            editShopItemUseCase.editShopItem(shopItem)
+        if (fieldsValid) {
+            // получаем объект из LiveData, если он там есть и он не NULL, то выполняем код в {}
+            shopItem.value?.let {
+                // создаем новый объект путем копированием существуещего
+                val item = it.copy(name = name, count = count)  // именнованные параметры
+                editShopItemUseCase.editShopItem(item)
+                finishWork()
+            }
         }
     }
 
@@ -56,19 +98,32 @@ class ShopItemViewModel : ViewModel() {
     }
 
     // проверяем корректность введенных данных
-    private fun validateInput(name: String, count: Int) : Boolean{
+    private fun validateInput(name: String, count: Int): Boolean {
         var result = true
         // проверем пустое ли имя
-        if(name.isBlank()){
-            // TODO: show error input name
+        if (name.isBlank()) {
+            _errorInputName.value = true
             result = false
         }
         // проверяем на количество
-        if(count <= 0){
-            // TODO: show error input count
+        if (count <= 0) {
+            _errorInputCount.value = true
             result = false
         }
         return result
+    }
+
+    fun resetErrorInputName() {
+        _errorInputName.value = false
+    }
+
+    fun resetErrorInputCount() {
+        _errorInputCount.value = false
+    }
+
+    // завершение работы
+    private fun finishWork(){
+        _shouldCloseScreen.value = Unit
     }
 
 }
