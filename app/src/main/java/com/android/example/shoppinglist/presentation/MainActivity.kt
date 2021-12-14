@@ -1,14 +1,14 @@
 package com.android.example.shoppinglist.presentation
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.android.example.shoppinglist.R
-import com.android.example.shoppinglist.domain.ShopItem
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
 
@@ -30,6 +30,15 @@ class MainActivity : AppCompatActivity() {
         viewModel.shopList.observe(this) {
             // вызываем в новом потоке обновленный список
             shopListAdapter.submitList(it)
+        }
+        val buttonAddItem = findViewById<FloatingActionButton>(R.id.button_add_shop_item)
+        buttonAddItem.setOnClickListener {
+            // создаем новый экран
+            val intent = ShopItemActivity.newIntentAddItem(this)
+            // передаем режим работы экрана в качестве параметра
+            //intent.putExtra(EXTRA_SCREEN_MODE, MODE_ADD)   // сам режим mode_add
+            // запускаем созданный экран
+            startActivity(intent)
         }
     }
 
@@ -66,6 +75,10 @@ class MainActivity : AppCompatActivity() {
     private fun setupClickListener() {
         shopListAdapter.onShopItemClickListener = {
             Log.d("MainActivity", it.toString())
+            // создаем новый экран
+            val intent = ShopItemActivity.newIntentEditItem(this, it.id)
+            // запускаем созданный экран
+            startActivity(intent)
         }
     }
 
