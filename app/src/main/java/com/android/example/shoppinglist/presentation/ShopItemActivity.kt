@@ -39,7 +39,7 @@ class ShopItemActivity : AppCompatActivity() {
         // вызовим метод инициализации, все view элементы
         initViews()
         // добавляем слушателей ввода текста
-        addTextChangeListener()
+        addTextChangeListeners()
         // запускаем правильный режим экрана
         launchRightMode()
         // подписываемся на все объекты viewModel
@@ -63,7 +63,7 @@ class ShopItemActivity : AppCompatActivity() {
             } else {
                 null
             }
-            tilCount.error = message
+            tilName.error = message
         }
         // если работа с экраном завершена, то закроем экран
         viewModel.shouldCloseScreen.observe(this) {
@@ -71,6 +71,7 @@ class ShopItemActivity : AppCompatActivity() {
         }
     }
 
+    // запускаем правильный режим экрана
     private fun launchRightMode() {
         // настраиваем экран
         when (screenMode) {
@@ -80,7 +81,7 @@ class ShopItemActivity : AppCompatActivity() {
     }
 
     // устанавливаем слушателя текста
-    private fun addTextChangeListener() {
+    private fun addTextChangeListeners() {
         etName.addTextChangedListener(object : TextWatcher {
             // скрываем ошибку при вводе текста
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
