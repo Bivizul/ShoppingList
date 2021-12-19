@@ -17,7 +17,7 @@ import com.google.android.material.textfield.TextInputLayout
 class ShopItemActivity : AppCompatActivity() {
 
     // ссылка на viewModel
-    private lateinit var viewModel: ShopItemViewModel
+/*    private lateinit var viewModel: ShopItemViewModel
 
     private lateinit var tilName: TextInputLayout
     private lateinit var tilCount: TextInputLayout
@@ -26,13 +26,13 @@ class ShopItemActivity : AppCompatActivity() {
     private lateinit var buttonSave: Button
 
     private var screenMode = MODE_UNKNOWN
-    private var shopItemId = ShopItem.UNDEFINED_ID
+    private var shopItemId = ShopItem.UNDEFINED_ID*/
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // устанавливаем контент
         setContentView(R.layout.activity_shop_item)
-        // проверяем все ли параметры передаются intent-u
+/*        // проверяем все ли параметры передаются intent-u
         parseIntent()
         // инициализируем ссылку на viewModel
         viewModel = ViewModelProvider(this)[ShopItemViewModel::class.java]
@@ -43,10 +43,10 @@ class ShopItemActivity : AppCompatActivity() {
         // запускаем правильный режим экрана
         launchRightMode()
         // подписываемся на все объекты viewModel
-        observeViewModel()
+        observeViewModel()*/
 
     }
-
+/*
     // подпишемся на остальные объекты из viewModel
     private fun observeViewModel() {
         viewModel.errorInputCount.observe(this) {
@@ -157,7 +157,7 @@ class ShopItemActivity : AppCompatActivity() {
         etCount = findViewById(R.id.et_count)
         buttonSave = findViewById(R.id.save_button)
     }
-
+*/
     companion object {
 
         private const val EXTRA_SCREEN_MODE = "extra_mode"
