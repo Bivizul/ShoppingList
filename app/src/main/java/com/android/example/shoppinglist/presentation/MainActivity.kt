@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.android.example.shoppinglist.R
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedListener {
 
     // так как точно будет присваивать значение, поэтому можем использовать lateinit var
     // чтобы не делать постоянную проверку на NULL
@@ -47,6 +47,11 @@ class MainActivity : AppCompatActivity() {
                 launchFragment(ShopItemFragment.newInstanceAddItem())
             }
         }
+    }
+
+    override fun onEditingFinished(){
+        Toast.makeText(this@MainActivity, "Success", Toast.LENGTH_SHORT).show()
+        supportFragmentManager.popBackStack()
     }
 
     private fun isOnePaneMode() : Boolean{

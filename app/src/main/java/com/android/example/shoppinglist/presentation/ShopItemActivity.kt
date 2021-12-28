@@ -14,7 +14,7 @@ import com.android.example.shoppinglist.domain.ShopItem
 import com.google.android.material.textfield.TextInputLayout
 
 // данный экран может работать в режиме добавления и в режиме редактирования
-class ShopItemActivity : AppCompatActivity() {
+class ShopItemActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedListener {
 
     private var screenMode = MODE_UNKNOWN
     private var shopItemId = ShopItem.UNDEFINED_ID
@@ -30,6 +30,11 @@ class ShopItemActivity : AppCompatActivity() {
             launchRightMode()
         }
     }
+
+    override fun onEditingFinished() {
+        finish()
+    }
+
     // запускаем правильный режим экрана
     private fun launchRightMode() {
         val fragment = when (screenMode) {  // если режим подгодящий, то возвращаем экземпляр фрагмента
