@@ -1,34 +1,26 @@
 package com.android.example.shoppinglist.presentation
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.android.example.shoppinglist.R
+import com.android.example.shoppinglist.databinding.ActivityMainBinding
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedListener {
 
-    // так как точно будет присваивать значение, поэтому можем использовать lateinit var
-    // чтобы не делать постоянную проверку на NULL
+    private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: MainViewModel
-
-    //    private lateinit var llshopList: LinearLayout
     private lateinit var shopListAdapter: ShopListAdapter
-
-    private var shopItemContainer : FragmentContainerView? = null
-
-//    private var count = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        shopItemContainer = findViewById(R.id.shop_item_container)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         setupRecycleView()
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]      // 1-variant NEW
         //viewModel = ViewModelProvider(this).get(MainViewModel::class.java)       // 2-variant OLD
@@ -36,8 +28,7 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedList
             // вызываем в новом потоке обновленный список
             shopListAdapter.submitList(it)
         }
-        val buttonAddItem = findViewById<FloatingActionButton>(R.id.button_add_shop_item)
-        buttonAddItem.setOnClickListener {
+        binding.buttonAddShopItem.setOnClickListener {
             if(isOnePaneMode()){
                 // создаем новый экран
                 val intent = ShopItemActivity.newIntentAddItem(this)
@@ -55,7 +46,7 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedList
     }
 
     private fun isOnePaneMode() : Boolean{
-        return shopItemContainer == null
+        return binding.shopItemContainer == null
     }
 
     private fun launchFragment(fragment: Fragment){
@@ -69,10 +60,7 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedList
     }
 
     private fun setupRecycleView() {
-        // установка RecyclesView
-        val rvShopList = findViewById<RecyclerView>(R.id.rv_shop_list)
-        // Вставляем адаптер и настраиваем RecycleView
-        with(rvShopList) {
+        with(binding.rvShopList) {
             shopListAdapter = ShopListAdapter()
             adapter = shopListAdapter
             recycledViewPool.setMaxRecycledViews(
@@ -86,7 +74,7 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedList
         }
         setupLongClickListener()
         setupClickListener()
-        setupSwipeListener(rvShopList)
+        setupSwipeListener(binding.rvShopList)
     }
 
     // установка слушателей
