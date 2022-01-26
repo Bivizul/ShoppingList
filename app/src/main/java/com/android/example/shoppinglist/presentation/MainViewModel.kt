@@ -10,6 +10,10 @@ import com.android.example.shoppinglist.domain.DeleteShopItemUseCase
 import com.android.example.shoppinglist.domain.EditShopItemUseCase
 import com.android.example.shoppinglist.domain.GetShopListUseCase
 import com.android.example.shoppinglist.domain.ShopItem
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 
 // : AndroidViewModel() наследование нужно,если во ViewModel есть контекст
 // Если контекста нет то можно наследоваться от : ViewModel , в его конструктор ничего не нужно передавать
@@ -22,26 +26,25 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
     private val deleteShopItemUseCase = DeleteShopItemUseCase(repository)
     private val editShopItemUseCase = EditShopItemUseCase(repository)
 
-    // MutableLiveData - это LiveData в которую мы сами можем вставлять объекты
-//    val shopList = MutableLiveData<List<ShopItem>>()
+    private val scope = CoroutineScope(Dispatchers.IO)      // IO - input - output
+
     val shopList = getShopListUseCase.getShopList()
 
-//    fun getShopList(){
-//        val list = getShopListUseCase.getShopList()
-//        // добавляем елемент
-//        shopList.value = list      // можно вызывать только из главного потока
-//        //shopList.postValue = list       // можно вызывать из любого потока
-//    }
-
     fun deleteShopItem(shopItem: ShopItem){
-        deleteShopItemUseCase.deleteShopItem(shopItem)
-//        getShopList()
+        scope.launch {
+            deleteShopItemUseCase.deleteShopItem(shopItem)
+        }
     }
 
     fun changeEnableState(shopItem: ShopItem){
-        val newItem = shopItem.copy(enable = !shopItem.enable)
-        editShopItemUseCase.editShopItem(newItem)
-//        getShopList()
+        scope.launch {
+            val newItem = shopItem.copy(enable = !shopItem.enable)
+            editShopItemUseCase.editShopItem(newItem)
+        }
+    }
 
+    override fun onCleared() {
+        super.onCleared()
+        scope.cancel()
     }
 }
