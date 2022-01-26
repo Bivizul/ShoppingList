@@ -9,7 +9,7 @@ data class ShopItem(
     // любые жестко закодированные числа лучше выводить в КОНСТАНТУ
 ){
     companion object{
-        const val UNDEFINED_ID = -1
+        const val UNDEFINED_ID = 0
     }
 }
 
